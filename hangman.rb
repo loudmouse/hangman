@@ -16,16 +16,12 @@ class Hangman
     turn
   end
 
-  def letters_available
-    @available_letters.each { |letter| print letter }
-  end
-
   def letters_in_word
     @the_word.length
   end
 
   def divider
-    50.times {print "="}
+    50.times {print "."}
     puts
   end
 
@@ -58,14 +54,17 @@ class Hangman
           #p correct_letter_index
           correct_letter_index.each { |index| @board[index] = letter_choice }
           @correct_letters << letter_choice
-          puts "That's a bingo! '#{letter_choice}' is in the word!"
+          puts "Correct!"
         else #need to include a message if you select an already selected letter
           @wrong_letters << letter_choice
-          puts "WRONG! '#{letter_choice}' is not in the word."
+          puts "Incorrect"
           @remaining_guesses -= 1
         end
         display_board
         display_remaining_guesses
+        divider
+        display_available_letters
+        display_wrong_letters
     end
       game_over
       display_secret_word
@@ -76,13 +75,17 @@ class Hangman
   end
 
   def display_wrong_letters
-     puts "These are your wrong guesses:"
+     puts "Incorrect:"
      @wrong_letters.each { |letter| print letter }
      puts
   end
 
+  def letters_available
+    @available_letters.each { |letter| print letter }
+  end
+
   def display_available_letters
-    puts "Available letters:"
+    puts "Available:"
     letters_available
     puts
   end
