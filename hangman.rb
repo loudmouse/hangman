@@ -1,10 +1,10 @@
 class Hangman
 
   def initialize()
-    @board = ["_","_","_","_","_","_","_","_"]
+    @board = ["_","_","_","_","_","_","_","_","_","_","_","_"]
     @available_letters = ("a".."z").to_a
     @the_word = ""
-    @remaining_guesses = 7
+    @remaining_guesses = 6
     @chosen_letters = []
     @correct_letters = []
     @wrong_letters = []
@@ -21,7 +21,7 @@ class Hangman
   end
 
   def letters_in_word
-    @the_word.size-1
+    @the_word.length
   end
 
   def divider
@@ -40,12 +40,16 @@ class Hangman
     divider
   end
 
-
   def turn
-    letters_in_word
-    puts "Let's play hangman! Enter a letter."
+    display_board
+    display_remaining_guesses
+    puts "Enter a letter."
     while @remaining_guesses > 0
       letter_choice = gets.chomp.downcase
+      if @chosen_letters.include? letter_choice
+        puts "Already selected. Try Again!"
+        turn
+      end
       @chosen_letters << letter_choice
       @available_letters.delete(letter_choice)
         if @the_word.include? letter_choice
@@ -58,12 +62,13 @@ class Hangman
         else #need to include a message if you select an already selected letter
           @wrong_letters << letter_choice
           puts "WRONG! '#{letter_choice}' is not in the word."
+          @remaining_guesses -= 1
         end
-      @remaining_guesses -= 1
-      display_board
-      display_remaining_guesses
+        display_board
+        display_remaining_guesses
     end
       game_over
+      display_secret_word
   end
 
   def game_over
@@ -93,7 +98,7 @@ class Hangman
   end
 
   def display_board
-    letters_in_word.times { |x| print @board[x] }
+    (letters_in_word-1).times { |x| print @board[x] }
     puts
     #puts "#{@board[0]} #{@board[1]} #{@board[2]} #{@board[3]} #{@board[4]} #{@board[5]} #{@board[6]} #{@board[7]}"
   end
@@ -106,7 +111,10 @@ class Hangman
     @the_word = valid_words.sample.downcase
     #puts "The word is: #{@the_word}"
   end
-end
 
+  def display_secret_word
+    puts "The word was: #{@the_word}"
+  end
+end
 
 Hangman.new.play
