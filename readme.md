@@ -1,7 +1,5 @@
 # TO DO:
 - menu with game options
-  - prompt to display available letters
-  - prompt to display guessed letters
   - prompt to save game
   - prompt to load game
 - OOP refactoring
