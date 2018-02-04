@@ -1,4 +1,4 @@
-#HOW TO PLAY:
+# HOW TO PLAY:
 - download repository
 - run: ruby hangman.rb from terminal
 
