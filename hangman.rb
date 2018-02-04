@@ -1,3 +1,5 @@
+require "yaml"
+
 class Hangman
 
   def initialize()
@@ -13,7 +15,8 @@ class Hangman
   def play
     #game_menu
     secret_word
-    turn
+    menu
+    #turn
   end
 
   def letters_in_word
@@ -25,22 +28,61 @@ class Hangman
     puts
   end
 
-  def game_menu
+  def save_game(game_data)
+    File.open('game_save.txt', 'w') { |f| f.puts game_data.to_yaml }
+  end
+
+  def load_game
+    game_load = File.open('game_save.txt', 'r')
+    game_data = YAML.load(game_load)
+    game_data
+  end
+
+  def save_prompt
+    puts "Would you like to save your game? (y/n)"
+    opt_save = gets.chomp.downcase
+    if opt_save == 'y'
+      game_data = [@the_word, @available_letters, @remaining_guesses, @chosen_letters, @correct_letters, @wrong_letters]
+      save_game(game_data)
+      puts '---Game saved---'
+    elsif opt_save == 'n'
+      turn
+    else
+      puts "Invalid response"
+      save_prompt
+    end
+  end
+
+  def menu
+    puts "Welcome to hangman."
+    puts "Type 'play' to start playing."
+    puts "Type 'load' to open a saved game."
     divider
-    puts "MENU"
-    puts "1 to see avialable letters"
-    puts "2 to see your incorrectly guessed letters"
-    puts "3 to save the game"
-    puts "4 to load the game"
-    puts "5 to quit the game"
-    divider
+    menu_choice = gets.chomp.downcase
+    if menu_choice == 'play'
+      turn
+    elsif menu_choice == 'load'
+      game_data = load_game
+      @the_word = game_data[0]
+      @available_letters = game_data[1]
+      @remaining_guesses = game_data[2]
+      @chosen_letters = game_data[3]
+      @correct_letters = game_data[4]
+      @wrong_letters = game_data[5]
+      puts '---Game loaded---'
+      turn
+    else
+      puts "Invalid Entry"
+      menu
+    end
   end
 
   def turn
     display_board
     display_remaining_guesses
-    puts "Enter a letter."
+
     while @remaining_guesses > 0
+      puts "Enter a letter."
       letter_choice = gets.chomp.downcase
       if @chosen_letters.include? letter_choice
         puts "Already selected. Try Again!"
@@ -62,9 +104,10 @@ class Hangman
         end
         display_board
         display_remaining_guesses
-        divider
         display_available_letters
         display_wrong_letters
+        save_prompt
+        divider
     end
       game_over
       display_secret_word
