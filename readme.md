@@ -1,3 +1,7 @@
+#HOW TO PLAY:
+- download repository
+- run: ruby hangman.rb from terminal
+
 # TO DO:
 - Congratulate winner
 - OOP refactoring
